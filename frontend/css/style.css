@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f7f9fb;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  
+  nav {
+    background: #1e293b;
+    color: #fff;
+    padding: 1rem;
+  }
+  
+  button {
+    background: #3b82f6;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background: #2563eb;
+  }
+  
