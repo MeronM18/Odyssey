@@ -22,6 +22,11 @@ const hotelsSlider = document.getElementById("hotelsSlider");
 const eventsSlider = document.getElementById("eventsSlider");
 const carsSlider = document.getElementById("carsSlider");
 
+const flightsAmountInput = document.getElementById("flightsAmount");
+const hotelsAmountInput = document.getElementById("hotelsAmount");
+const eventsAmountInput = document.getElementById("eventsAmount");
+const carsAmountInput = document.getElementById("carsAmount");
+
 let currentBudget = 0;
 
 loginBtn.addEventListener("click", async () => {
@@ -56,16 +61,57 @@ function updateAllocationAmounts() {
   const cars = parseInt(carsSlider.value);
   
   document.getElementById("flightsPercent").textContent = flights;
-  document.getElementById("flightsAmount").textContent = `$${((currentBudget * flights) / 100).toFixed(2)}`;
+  flightsAmountInput.value = ((currentBudget * flights) / 100).toFixed(2);
   
   document.getElementById("hotelsPercent").textContent = hotels;
-  document.getElementById("hotelsAmount").textContent = `$${((currentBudget * hotels) / 100).toFixed(2)}`;
+  hotelsAmountInput.value = ((currentBudget * hotels) / 100).toFixed(2);
   
   document.getElementById("eventsPercent").textContent = events;
-  document.getElementById("eventsAmount").textContent = `$${((currentBudget * events) / 100).toFixed(2)}`;
+  eventsAmountInput.value = ((currentBudget * events) / 100).toFixed(2);
   
   document.getElementById("carsPercent").textContent = cars;
-  document.getElementById("carsAmount").textContent = `$${((currentBudget * cars) / 100).toFixed(2)}`;
+  carsAmountInput.value = ((currentBudget * cars) / 100).toFixed(2);
+  
+  updateTotalPercent();
+}
+
+function updateFromAmount(category) {
+  const amountInputs = {
+    flights: flightsAmountInput,
+    hotels: hotelsAmountInput,
+    events: eventsAmountInput,
+    cars: carsAmountInput
+  };
+  
+  const sliders = {
+    flights: flightsSlider,
+    hotels: hotelsSlider,
+    events: eventsSlider,
+    cars: carsSlider
+  };
+  
+  const percentSpans = {
+    flights: document.getElementById("flightsPercent"),
+    hotels: document.getElementById("hotelsPercent"),
+    events: document.getElementById("eventsPercent"),
+    cars: document.getElementById("carsPercent")
+  };
+  
+  const amount = parseFloat(amountInputs[category].value) || 0;
+  const percent = currentBudget > 0 ? Math.round((amount / currentBudget) * 100) : 0;
+  const clampedPercent = Math.min(100, Math.max(0, percent));
+  
+  sliders[category].value = clampedPercent;
+  percentSpans[category].textContent = clampedPercent;
+  
+  updateTotalPercent();
+}
+
+function updateTotalPercent() {
+  const flights = parseInt(flightsSlider.value);
+  const hotels = parseInt(hotelsSlider.value);
+  const events = parseInt(eventsSlider.value);
+  const cars = parseInt(carsSlider.value);
   
   const total = flights + hotels + events + cars;
   const totalPercentEl = document.getElementById("totalPercent");
@@ -82,6 +128,11 @@ flightsSlider.addEventListener("input", updateAllocationAmounts);
 hotelsSlider.addEventListener("input", updateAllocationAmounts);
 eventsSlider.addEventListener("input", updateAllocationAmounts);
 carsSlider.addEventListener("input", updateAllocationAmounts);
+
+flightsAmountInput.addEventListener("input", () => updateFromAmount("flights"));
+hotelsAmountInput.addEventListener("input", () => updateFromAmount("hotels"));
+eventsAmountInput.addEventListener("input", () => updateFromAmount("events"));
+carsAmountInput.addEventListener("input", () => updateFromAmount("cars"));
 
 saveAllocationBtn.addEventListener("click", async () => {
   const flights = parseInt(flightsSlider.value);
