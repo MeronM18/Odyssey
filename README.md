@@ -10,16 +10,13 @@ A travel planning web application for booking flights, hotels, events, and car r
 
 ## Run the Project
 
-**Windows:**
-```bash
-.\start.bat
-```
-
-**Manual:**
+**Terminal 1 - Backend:**
 ```bash
 cd Odyessia/backend
 npm run dev
 ```
+
+**Terminal 2 - Frontend:**
 ```bash
 cd Odyessia/frontend
 npx serve -l 3000
