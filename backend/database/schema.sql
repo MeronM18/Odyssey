@@ -4,6 +4,10 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   full_name TEXT,
   avatar_url TEXT,
   total_budget DECIMAL(10, 2),
+  flights_percent DECIMAL(5, 2) DEFAULT 40.00,
+  hotels_percent DECIMAL(5, 2) DEFAULT 30.00,
+  events_percent DECIMAL(5, 2) DEFAULT 20.00,
+  cars_percent DECIMAL(5, 2) DEFAULT 10.00,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

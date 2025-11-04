@@ -8,11 +8,21 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 const loginBtn = document.getElementById("login");
 const authSection = document.getElementById("auth");
 const budgetSetupSection = document.getElementById("budget-setup");
+const allocationSetupSection = document.getElementById("allocation-setup");
 const dashSection = document.getElementById("dashboard");
 const userEmail = document.getElementById("userEmail");
 const budgetInput = document.getElementById("budgetInput");
 const saveBudgetBtn = document.getElementById("saveBudget");
+const saveAllocationBtn = document.getElementById("saveAllocation");
 const userBudgetDisplay = document.getElementById("userBudget");
+
+const totalBudgetDisplay = document.getElementById("totalBudgetDisplay");
+const flightsSlider = document.getElementById("flightsSlider");
+const hotelsSlider = document.getElementById("hotelsSlider");
+const eventsSlider = document.getElementById("eventsSlider");
+const carsSlider = document.getElementById("carsSlider");
+
+let currentBudget = 0;
 
 loginBtn.addEventListener("click", async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -32,27 +42,86 @@ saveBudgetBtn.addEventListener("click", async () => {
     return;
   }
 
+  currentBudget = budgetValue;
+  budgetSetupSection.hidden = true;
+  allocationSetupSection.hidden = false;
+  totalBudgetDisplay.textContent = `$${budgetValue.toFixed(2)}`;
+  updateAllocationAmounts();
+});
+
+function updateAllocationAmounts() {
+  const flights = parseInt(flightsSlider.value);
+  const hotels = parseInt(hotelsSlider.value);
+  const events = parseInt(eventsSlider.value);
+  const cars = parseInt(carsSlider.value);
+  
+  document.getElementById("flightsPercent").textContent = flights;
+  document.getElementById("flightsAmount").textContent = `$${((currentBudget * flights) / 100).toFixed(2)}`;
+  
+  document.getElementById("hotelsPercent").textContent = hotels;
+  document.getElementById("hotelsAmount").textContent = `$${((currentBudget * hotels) / 100).toFixed(2)}`;
+  
+  document.getElementById("eventsPercent").textContent = events;
+  document.getElementById("eventsAmount").textContent = `$${((currentBudget * events) / 100).toFixed(2)}`;
+  
+  document.getElementById("carsPercent").textContent = cars;
+  document.getElementById("carsAmount").textContent = `$${((currentBudget * cars) / 100).toFixed(2)}`;
+  
+  const total = flights + hotels + events + cars;
+  const totalPercentEl = document.getElementById("totalPercent");
+  totalPercentEl.textContent = `${total}%`;
+  
+  if (total === 100) {
+    totalPercentEl.className = "total-percent valid";
+  } else {
+    totalPercentEl.className = "total-percent invalid";
+  }
+}
+
+flightsSlider.addEventListener("input", updateAllocationAmounts);
+hotelsSlider.addEventListener("input", updateAllocationAmounts);
+eventsSlider.addEventListener("input", updateAllocationAmounts);
+carsSlider.addEventListener("input", updateAllocationAmounts);
+
+saveAllocationBtn.addEventListener("click", async () => {
+  const flights = parseInt(flightsSlider.value);
+  const hotels = parseInt(hotelsSlider.value);
+  const events = parseInt(eventsSlider.value);
+  const cars = parseInt(carsSlider.value);
+  const total = flights + hotels + events + cars;
+  
+  if (total !== 100) {
+    alert("Total allocation must equal 100%. Currently: " + total + "%");
+    return;
+  }
+
   try {
     const user = (await supabase.auth.getUser()).data.user;
     if (!user) throw new Error("User not authenticated");
 
     const { data, error } = await supabase
       .from("profiles")
-      .update({ total_budget: budgetValue })
+      .update({ 
+        total_budget: currentBudget,
+        flights_percent: flights,
+        hotels_percent: hotels,
+        events_percent: events,
+        cars_percent: cars
+      })
       .eq("id", user.id)
       .select();
 
     if (error) throw error;
 
-    budgetSetupSection.hidden = true;
+    allocationSetupSection.hidden = true;
     dashSection.hidden = false;
     userEmail.textContent = user.email;
-    userBudgetDisplay.textContent = `$${budgetValue.toFixed(2)}`;
+    userBudgetDisplay.textContent = `$${currentBudget.toFixed(2)}`;
     
-    console.log("Budget saved successfully:", data);
+    console.log("Budget and allocations saved successfully:", data);
   } catch (error) {
-    console.error("Error saving budget:", error);
-    alert("Failed to save budget. Please try again.");
+    console.error("Error saving allocations:", error);
+    alert("Failed to save allocations. Please try again.");
   }
 });
 
@@ -79,10 +148,20 @@ async function handleUserSession(user) {
     if (!profile.total_budget || profile.total_budget === 0) {
       authSection.hidden = true;
       budgetSetupSection.hidden = false;
+      allocationSetupSection.hidden = true;
       dashSection.hidden = true;
+    } else if (!profile.flights_percent && !profile.hotels_percent) {
+      authSection.hidden = true;
+      budgetSetupSection.hidden = true;
+      allocationSetupSection.hidden = false;
+      dashSection.hidden = true;
+      currentBudget = parseFloat(profile.total_budget);
+      totalBudgetDisplay.textContent = `$${currentBudget.toFixed(2)}`;
+      updateAllocationAmounts();
     } else {
       authSection.hidden = true;
       budgetSetupSection.hidden = true;
+      allocationSetupSection.hidden = true;
       dashSection.hidden = false;
       userEmail.textContent = user.email;
       userBudgetDisplay.textContent = `$${parseFloat(profile.total_budget).toFixed(2)}`;
@@ -91,6 +170,7 @@ async function handleUserSession(user) {
     console.error("Error fetching profile:", error);
     authSection.hidden = true;
     budgetSetupSection.hidden = false;
+    allocationSetupSection.hidden = true;
     dashSection.hidden = true;
   }
 }

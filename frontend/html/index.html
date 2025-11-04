@@ -31,7 +31,65 @@
               step="100"
             />
           </div>
-          <button id="saveBudget" class="btn-primary">Save Budget</button>
+          <button id="saveBudget" class="btn-primary">Continue</button>
+        </div>
+      </section>
+
+      <section id="allocation-setup" hidden>
+        <div class="allocation-container">
+          <h2>Allocate Your Budget</h2>
+          <p class="total-display">Total Budget: <span id="totalBudgetDisplay">$0.00</span></p>
+          
+          <div class="allocation-item">
+            <div class="allocation-header">
+              <span class="allocation-label">✈️ Flights</span>
+              <span class="allocation-value">
+                <span id="flightsPercent">40</span>% 
+                (<span id="flightsAmount">$0.00</span>)
+              </span>
+            </div>
+            <input type="range" id="flightsSlider" min="0" max="100" value="40" step="1">
+          </div>
+
+          <div class="allocation-item">
+            <div class="allocation-header">
+              <span class="allocation-label">🏨 Hotels</span>
+              <span class="allocation-value">
+                <span id="hotelsPercent">30</span>% 
+                (<span id="hotelsAmount">$0.00</span>)
+              </span>
+            </div>
+            <input type="range" id="hotelsSlider" min="0" max="100" value="30" step="1">
+          </div>
+
+          <div class="allocation-item">
+            <div class="allocation-header">
+              <span class="allocation-label">🎉 Events</span>
+              <span class="allocation-value">
+                <span id="eventsPercent">20</span>% 
+                (<span id="eventsAmount">$0.00</span>)
+              </span>
+            </div>
+            <input type="range" id="eventsSlider" min="0" max="100" value="20" step="1">
+          </div>
+
+          <div class="allocation-item">
+            <div class="allocation-header">
+              <span class="allocation-label">🚗 Cars</span>
+              <span class="allocation-value">
+                <span id="carsPercent">10</span>% 
+                (<span id="carsAmount">$0.00</span>)
+              </span>
+            </div>
+            <input type="range" id="carsSlider" min="0" max="100" value="10" step="1">
+          </div>
+
+          <div class="total-check">
+            <span>Total Allocated:</span>
+            <span id="totalPercent" class="total-percent">100%</span>
+          </div>
+
+          <button id="saveAllocation" class="btn-primary">Save & Continue</button>
         </div>
       </section>
 

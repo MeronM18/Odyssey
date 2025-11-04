@@ -100,4 +100,102 @@ body {
     font-weight: bold;
     font-size: 1.3rem;
   }
+
+  .allocation-container {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 3rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .allocation-container h2 {
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .total-display {
+    color: #64748b;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+
+  #totalBudgetDisplay {
+    color: #10b981;
+    font-weight: bold;
+  }
+
+  .allocation-item {
+    margin-bottom: 2rem;
+  }
+
+  .allocation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .allocation-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .allocation-value {
+    font-size: 1rem;
+    color: #64748b;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #e2e8f0;
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    border: none;
+  }
+
+  .total-check {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background: #f1f5f9;
+    border-radius: 8px;
+    margin: 2rem 0;
+    font-weight: 600;
+  }
+
+  .total-percent {
+    font-size: 1.2rem;
+  }
+
+  .total-percent.valid {
+    color: #10b981;
+  }
+
+  .total-percent.invalid {
+    color: #ef4444;
+  }
   
