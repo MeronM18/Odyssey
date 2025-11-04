@@ -1,4 +1,4 @@
-# Odyssey 🌍
+# Odyessia 🌍
 
 A travel planning web application built with:
 - Node.js + Express (backend)
