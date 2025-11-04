@@ -16,10 +16,7 @@ const userBudgetDisplay = document.getElementById("userBudget");
 
 loginBtn.addEventListener("click", async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: window.location.href
-    }
+    provider: "google"
   });
   if (error) console.error("Login error:", error);
 });
