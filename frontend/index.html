@@ -3,13 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="refresh" content="0;url=/html/index.html" />
-    <title>Redirecting...</title>
+    <title>Odyssey</title>
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    <script>
-      window.location.href = "/html/index.html";
-    </script>
+    <nav>
+      <h1>Odyssey 🌍</h1>
+    </nav>
+
+    <main>
+      <section id="auth" hidden>
+        <h2>Login / Sign Up</h2>
+        <button id="login">Login with Google</button>
+      </section>
+
+      <section id="budget-setup" hidden>
+        <div class="budget-container">
+          <h2>Welcome to Odyessia!</h2>
+          <p>Let's start by setting your travel budget</p>
+          <div class="budget-input-group">
+            <span class="currency-symbol">$</span>
+            <input 
+              type="number" 
+              id="budgetInput" 
+              placeholder="0.00" 
+              min="0" 
+              step="0.01"
+            />
+          </div>
+          <button id="saveBudget" class="btn-primary">Save Budget</button>
+        </div>
+      </section>
+
+      <section id="dashboard" hidden>
+        <h2>Welcome Back!</h2>
+        <p id="userEmail"></p>
+        <div class="budget-display">
+          <p>Your Travel Budget: <span id="userBudget">$0.00</span></p>
+        </div>
+      </section>
+    </main>
+
+    <script src="./js/supabase.js" type="module"></script>
   </body>
 </html>
 
