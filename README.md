@@ -12,13 +12,27 @@ A travel planning web application for booking flights, hotels, events, and car r
 
 See [SETUP.md](SETUP.md) for detailed setup instructions.
 
+### Option 1: Use Start Script (Windows)
+```powershell
+.\start.ps1
+```
+
+### Option 2: Manual Start
+**Terminal 1 - Backend:**
 ```bash
 cd backend
-npm install
 npm run dev
 ```
 
-Run the SQL from `backend/database/schema.sql` in Supabase SQL Editor to create tables.
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+npx serve -l 3000
+```
+
+Then open: http://localhost:3000/html/index.html
+
+**Note:** Run the SQL from `backend/database/schema.sql` in Supabase SQL Editor first.
 
 ## Features
 - Google OAuth authentication
