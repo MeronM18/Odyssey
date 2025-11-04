@@ -7,8 +7,12 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const loginBtn = document.getElementById("login");
 const authSection = document.getElementById("auth");
+const budgetSetupSection = document.getElementById("budget-setup");
 const dashSection = document.getElementById("dashboard");
 const userEmail = document.getElementById("userEmail");
+const budgetInput = document.getElementById("budgetInput");
+const saveBudgetBtn = document.getElementById("saveBudget");
+const userBudgetDisplay = document.getElementById("userBudget");
 
 loginBtn.addEventListener("click", async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -17,16 +21,76 @@ loginBtn.addEventListener("click", async () => {
   if (error) console.error("Login error:", error);
 });
 
+saveBudgetBtn.addEventListener("click", async () => {
+  const budgetValue = parseFloat(budgetInput.value);
+  
+  if (!budgetValue || budgetValue <= 0) {
+    alert("Please enter a valid budget amount");
+    return;
+  }
+
+  try {
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) throw new Error("User not authenticated");
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ total_budget: budgetValue })
+      .eq("id", user.id)
+      .select();
+
+    if (error) throw error;
+
+    budgetSetupSection.hidden = true;
+    dashSection.hidden = false;
+    userEmail.textContent = user.email;
+    userBudgetDisplay.textContent = `$${budgetValue.toFixed(2)}`;
+    
+    console.log("Budget saved successfully:", data);
+  } catch (error) {
+    console.error("Error saving budget:", error);
+    alert("Failed to save budget. Please try again.");
+  }
+});
+
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (session && session.user) {
-    authSection.hidden = true;
-    dashSection.hidden = false;
-    userEmail.textContent = session.user.email;
+    await handleUserSession(session.user);
   } else {
     authSection.hidden = false;
+    budgetSetupSection.hidden = true;
     dashSection.hidden = true;
   }
 });
+
+async function handleUserSession(user) {
+  try {
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (error) throw error;
+
+    if (!profile.total_budget || profile.total_budget === 0) {
+      authSection.hidden = true;
+      budgetSetupSection.hidden = false;
+      dashSection.hidden = true;
+    } else {
+      authSection.hidden = true;
+      budgetSetupSection.hidden = true;
+      dashSection.hidden = false;
+      userEmail.textContent = user.email;
+      userBudgetDisplay.textContent = `$${parseFloat(profile.total_budget).toFixed(2)}`;
+    }
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    authSection.hidden = true;
+    budgetSetupSection.hidden = false;
+    dashSection.hidden = true;
+  }
+}
 
 async function getFlights() {
   const { data, error } = await supabase
